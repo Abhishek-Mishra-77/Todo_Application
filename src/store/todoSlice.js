@@ -1,35 +1,39 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  todos: [],
-};
+  todos: JSON.parse(localStorage.getItem("todos")) || [],
+  editModal: false
+}
 
 export const todoSlice = createSlice({
   name: "todo",
   initialState,
   reducers: {
     addTodo: (state, action) => {
-      const todo = {
-        id: nanoid(),
-        text: action.payload,
-      };
-      state.todos.push(todo);
+      state.todos.push(action.payload);
+      localStorage.setItem('todos', JSON.stringify(state.todos));
     },
-    removeTodo: (state, action) => {
-      state.todos = state.todos.filter((todo) => todo.id !== action.payload);
+    removeTask: (state, action) => {
+      state.todos = state.todos.filter((task) => task.id !== action.payload);
+      localStorage.setItem('todos', JSON.stringify(state.todos));
     },
     editTodo: (state, action) => {
-      const { id, newText } = action.payload;
+      const { id, isCompleted } = action.payload;
       state.todos = state.todos.map((todo) => {
         if (todo.id === id) {
-          return { ...todo, text: newText };
+          return { ...todo, task: action.payload.task, isCompleted: isCompleted };
         }
         return todo;
       });
+      localStorage.setItem('todos', JSON.stringify(state.todos));
+      state.editModal = !state.editModal;
     },
+    modalHandle: (state, action) => {
+      state.editModal = !state.editModal;
+    }
   },
 });
 
-export const { addTodo, removeTodo, editTodo } = todoSlice.actions;
+export const { addTodo, removeTask, editTodo, modalHandle } = todoSlice.actions;
 
 export default todoSlice.reducer;
