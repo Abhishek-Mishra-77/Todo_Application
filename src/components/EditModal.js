@@ -5,6 +5,7 @@ const EditModal = ({ setEditTask, editTask }) => {
     const { editModal } = useSelector((state) => state.todo);
     const dispatch = useDispatch();
 
+    // Edit task function
     const handleEditTask = () => {
         if (!editTask.task) {
             toast.warning("Please fill the input field.");

@@ -30,10 +30,19 @@ export const todoSlice = createSlice({
     },
     modalHandle: (state, action) => {
       state.editModal = !state.editModal;
+    },
+    taskStatus: (state, action) => {
+      state.todos = state.todos.map((todo) => {
+        if (todo.id === action.payload) {
+          return { ...todo, isCompleted: !todo.isCompleted };
+        }
+        return todo;
+      });
+      localStorage.setItem('todos', JSON.stringify(state.todos));
     }
   },
 });
 
-export const { addTodo, removeTask, editTodo, modalHandle } = todoSlice.actions;
+export const { addTodo, removeTask, editTodo, modalHandle, taskStatus } = todoSlice.actions;
 
 export default todoSlice.reducer;
